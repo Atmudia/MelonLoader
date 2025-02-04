@@ -5,15 +5,26 @@ namespace MelonLoader.Bootstrap.Utils;
 
 public static unsafe partial class Dobby
 {
+    #if LINUX && WINDOWS
     [LibraryImport("*", EntryPoint = "DobbyPrepare")]
+    #else
+    [LibraryImport("libdobby", EntryPoint = "DobbyPrepare")]
+    #endif
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int Prepare(nint target, nint detour, nint* original);
 
+    #if LINUX && WINDOWS
     [LibraryImport("*", EntryPoint = "DobbyCommit")]
+    #else
+    [LibraryImport("libdobby", EntryPoint = "DobbyCommit")]
+    #endif
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int Commit(nint target);
-
+    #if LINUX && WINDOWS
     [LibraryImport("*", EntryPoint = "DobbyDestroy")]
+    #else
+    [LibraryImport("libdobby", EntryPoint = "DobbyDestroy")]
+    #endif
     [UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int Destroy(nint target);
 

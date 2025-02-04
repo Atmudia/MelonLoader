@@ -8,7 +8,7 @@ internal class Il2CppLib(Il2CppLib.MethodGetNameFn methodGetName)
     private const string libName = // Gotta specify the file extension in lower-case, otherwise Il2CppInterop brainfarts itself
 #if WINDOWS
         "GameAssembly.dll";
-#elif LINUX
+#elif LINUX || ANDROID
         "GameAssembly.so";
 #endif
 
