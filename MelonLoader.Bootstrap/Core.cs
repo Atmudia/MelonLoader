@@ -4,16 +4,17 @@ using MelonLoader.Bootstrap.RuntimeHandlers.Mono;
 using MelonLoader.Bootstrap.Utils;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using MelonLoader.Bootstrap.Proxy.Android;
 using Tomlet;
+// [assembly: DisableRuntimeMarshalling]
 
 namespace MelonLoader.Bootstrap;
 
 public static class Core
 {
     
-    [DllImport("liblog", EntryPoint = "__android_log_print")]
-    public static extern int Log(int prio, string tag,  string text);
     public static nint LibraryHandle { get; private set; }
 
     internal static InternalLogger Logger { get; private set; } = new(Color.BlueViolet, "MelonLoader.Bootstrap");
@@ -22,18 +23,15 @@ public static class Core
 
 #if LINUX
     [System.Runtime.InteropServices.UnmanagedCallersOnly(EntryPoint = "Init")]
-#elif ANDROID
-    [System.Runtime.InteropServices.UnmanagedCallersOnly(EntryPoint = "JNI_Load")]
 #endif
     [RequiresDynamicCode("Calls InitConfig")]
     public static void Init(nint moduleHandle)
     {
-        Log(6, "MelonLoader", "Initializing MelonLoader.");
         LibraryHandle = moduleHandle;
         //
         var exePath = Environment.ProcessPath!;
         GameDir = Path.GetDirectoryName(exePath)!;
-        
+        AndroidProxy.Log(3, "MelonLoader", GameDir);
         DataDir = Path.Combine(GameDir, Path.GetFileNameWithoutExtension(exePath) + "_Data");
         if (!Directory.Exists(DataDir))
             return;
@@ -58,7 +56,7 @@ public static class Core
     }
 
     [RequiresDynamicCode("Dynamically accesses LoaderConfig properties")]
-    private static void InitConfig()
+    public static void InitConfig()
     {
         var customBaseDir = ArgParser.GetValue("melonloader.basedir");
         var baseDir = Directory.Exists(customBaseDir) ? Path.GetFullPath(customBaseDir) : LoaderConfig.Current.Loader.BaseDirectory;

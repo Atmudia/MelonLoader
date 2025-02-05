@@ -1,0 +1,54 @@
+ // {
+    //    if (!NativeLibrary.TryLoad("libmain.so", out var library))
+    //    {
+    //        return 0;
+    //    }
+    //
+    //    NativeFunc.GetExport<LoadDelegate>(library, "load", out var load);
+    //    NativeFunc.GetExport<UnloadDelegate>(library, "unload", out var unload);
+    //
+    //    JNI.Initialize(vm);
+    //    IntPtr something = IntPtr.Zero;
+    //     // JNI.VM->Functions->AttachCurrentThread(JNI.VM, out JNIEnv* env, ref something);
+    //     Log(3, "MelonLoader", something.ToString());
+    //     var findClass = JNI.FindClass("com/unity3d/player/NativeLoader");
+    //     Log(3, "MelonLoader", "Here?");
+    //     JNINativeMethod* methods = stackalloc JNINativeMethod[2]
+    //     {
+    //         new()
+    //         {
+    //             name = Marshal.StringToHGlobalAnsi("load"),
+    //             sig = Marshal.StringToHGlobalAnsi("(Ljava/lang/String;)Z"), // Change to byte return
+    //             fn_ptr = Marshal.GetFunctionPointerForDelegate<LoadDelegate>(load)
+    //         },
+    //         new()
+    //         {
+    //             name = Marshal.StringToHGlobalAnsi("unload"),
+    //             sig = Marshal.StringToHGlobalAnsi("()Z"), // Change to byte return
+    //             fn_ptr = Marshal.GetFunctionPointerForDelegate<UnloadDelegate>(unload), // Match return type
+    //         }
+    //     }; 
+    //     // Log(3, "MelonLoader", "Here?");
+    //         // Log(6, "MelonLoader", $"Load Ptr: {(IntPtr)(delegate* unmanaged[Cdecl]<void*, void*, void*, sbyte>)&Load}");
+    //         // Log(6, "MelonLoader", $"Unload Ptr: {(IntPtr)(delegate* unmanaged[Cdecl]<void*, void*, sbyte>)&Unload}");
+    //     Log(6, "MelonLoader", $"Class Handle: {findClass.Handle}");
+    //     Log(6, "MelonLoader", $"Method Count: {2}");
+    //     int result = JNI.Env->Functions->RegisterNatives(JNI.Env, findClass.Handle, (IntPtr)methods, 2);
+    //     if (result != 0)
+    //     {
+    //         Log(6, "MelonLoader", $"RegisterNatives failed with error code {result}");
+    //         return 0;
+    //     }
+    //     Log(3, "MelonLoader", result.ToString());
+    //     Log(3, "MelonLoader", "Here?");
+    //     
+    //     return 0;
+    // }
+    //
+    // [StructLayout(LayoutKind.Sequential, Size = 12)]
+    // unsafe internal struct JNINativeMethod
+    // {
+    //     public IntPtr name;
+    //     public IntPtr sig;
+    //     public IntPtr fn_ptr;
+    // }

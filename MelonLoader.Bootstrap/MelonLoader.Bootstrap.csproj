@@ -11,6 +11,8 @@
         <NoWarn>LNK4099</NoWarn>
         <InvariantGlobalization>true</InvariantGlobalization>
         <TrimUnusedDependencies>true</TrimUnusedDependencies>
+        <StripSymbols>false</StripSymbols>
+
 
     </PropertyGroup>
     <!-- Import NDK pressets -->
@@ -29,10 +31,10 @@
         <LinkerArg Include="-lstdc++" />
     </ItemGroup>
 
-    <PropertyGroup Condition="'$(Configuration)' != 'Debug'">
-        <DebugSymbols>false</DebugSymbols>
-        <DebugType>none</DebugType>
-    </PropertyGroup>
+<!--    <PropertyGroup Condition="'$(Configuration)' != 'Debug'">-->
+<!--        <DebugSymbols>true</DebugSymbols>-->
+<!--        <DebugType>embedded</DebugType>-->
+<!--    </PropertyGroup>-->
 
     <ItemGroup>
         <None Include="../BaseLibs/NetStandardPatches/*" CopyToOutputDirectory="PreserveNewest" Link="MelonLoader/Dependencies/NetStandardPatches/%(RecursiveDir)%(Filename)%(Extension)" />
@@ -65,6 +67,8 @@
         <PackageReference Include="Microsoft.NETCore.DotNetAppHost" Version="$(AppHostVersion)" PrivateAssets="All" />
         <PackageReference Include="Pastel" Version="6.0.1" />
         <PackageReference Include="Samboy063.Tomlet" Version="6.0.0" />
+
+
     </ItemGroup>
     
     <ItemGroup>
@@ -73,7 +77,7 @@
 
     <ItemGroup>
         <NativeLibrary Include="$(AppHostPath)" />
-<!--        <NativeLibrary Include="Deps/$(RuntimeIdentifier)/$(LibPrefix)dobby$(LibExt)" />-->
+        <NativeLibrary Include="Deps/$(RuntimeIdentifier)/$(LibPrefix)dobby$(LibExt)" />
     </ItemGroup>
     
 <!--    <ItemGroup Condition="'$(RuntimeIdentifier.StartsWith(`linux-`))' == 'true'">-->

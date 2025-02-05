@@ -5,11 +5,15 @@ namespace MelonLoader.Bootstrap.RuntimeHandlers.Il2Cpp;
 
 internal class Il2CppLib(Il2CppLib.MethodGetNameFn methodGetName)
 {
-    private const string libName = // Gotta specify the file extension in lower-case, otherwise Il2CppInterop brainfarts itself
+    private const string
+        libName = // Gotta specify the file extension in lower-case, otherwise Il2CppInterop brainfarts itself
 #if WINDOWS
         "GameAssembly.dll";
-#elif LINUX || ANDROID
+#elif LINUX
         "GameAssembly.so";
+#else
+            "libil2cpp.so";
+
 #endif
 
     public required nint Handle { get; init; }
@@ -19,6 +23,8 @@ internal class Il2CppLib(Il2CppLib.MethodGetNameFn methodGetName)
 
     public static Il2CppLib? TryLoad()
     {
+        
+        
         if (!NativeLibrary.TryLoad(libName, out var hRuntime)
             || !NativeLibrary.TryGetExport(hRuntime, "il2cpp_init", out var initPtr)
             || !NativeLibrary.TryGetExport(hRuntime, "il2cpp_runtime_invoke", out var runtimeInvokePtr)

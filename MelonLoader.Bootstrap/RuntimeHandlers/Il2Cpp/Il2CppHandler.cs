@@ -1,5 +1,6 @@
 ﻿using MelonLoader.Bootstrap.Utils;
 using System.Runtime.InteropServices;
+using MelonLoader.Bootstrap.Proxy.Android;
 
 namespace MelonLoader.Bootstrap.RuntimeHandlers.Il2Cpp;
 
@@ -22,7 +23,6 @@ internal static class Il2CppHandler
 
         MelonDebug.Log("Patching il2cpp init");
         initPatch = Dobby.CreatePatch<Il2CppLib.InitFn>(il2cpp.InitPtr, InitDetour);
-
         return true;
     }
 
@@ -45,7 +45,7 @@ internal static class Il2CppHandler
 
     private static unsafe void InitializeManaged()
     {
-        var managedDir = Path.Combine(LoaderConfig.Current.Loader.BaseDirectory, "MelonLoader", "net6");
+        var managedDir = Path.Combine(LoaderConfig.Current.Loader.BaseDirectory, "MelonLoader", "net8");
         var runtimeConfigPath = Path.Combine(managedDir, "MelonLoader.runtimeconfig.json");
         var nativeHostPath = Path.Combine(managedDir, "MelonLoader.NativeHost.dll");
 
