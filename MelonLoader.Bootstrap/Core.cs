@@ -15,7 +15,7 @@ namespace MelonLoader.Bootstrap;
 public static class Core
 {
     
-    public static nint LibraryHandle { get; private set; }
+    public static nint LibraryHandle { get; internal set; }
 
     internal static InternalLogger Logger { get; private set; } = new(Color.BlueViolet, "MelonLoader.Bootstrap");
     public static string DataDir { get; private set; } = null!;

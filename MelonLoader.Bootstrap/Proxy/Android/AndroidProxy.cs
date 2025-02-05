@@ -40,7 +40,8 @@ public static class AndroidProxy
     [UnmanagedCallersOnly(EntryPoint = "JNI_OnLoad")]
     [RequiresDynamicCode("")]
     public static unsafe int JNI_OnLoad(IntPtr vm, IntPtr dunno)
-    { 
+    {
+        Core.LibraryHandle = System.Runtime.InteropServices.NativeLibrary.Load("libBootstrap.so");
         JNI.Initialize(vm);
         CacheDataDir();
         EnsurePerms();
@@ -154,7 +155,9 @@ public static class AndroidProxy
     {
         var combine = Path.Combine(DataDir);
         var combineMelon = Path.Combine(DataDir, "MelonLoader");
-        var combineDotnet = Path.Combine(DataDir, "dotnet");
+        var combineInternal= $"/data/data/{PackageName}/";
+        var combineDotnet = $"/data/data/{PackageName}/dotnet";
+        MelonDebug.Log(combineDotnet);
         if (Directory.Exists(combineMelon))
         {
             var fileModTime = Directory.GetLastWriteTimeUtc(combineMelon);
@@ -173,6 +176,8 @@ public static class AndroidProxy
             APKAssetManager.SaveItemToDirectory("MelonLoader", combine, true);
 
         }
+        // if(Directory.Exists(combineDotnet))
+        //     Directory.Delete(combineDotnet);
         if (Directory.Exists(combineDotnet))
         {
             var fileModTime = Directory.GetLastWriteTimeUtc(combineDotnet);
@@ -182,15 +187,16 @@ public static class AndroidProxy
             }
             else
             {
-                APKAssetManager.SaveItemToDirectory("dotnet", combine, true);
+                APKAssetManager.SaveItemToDirectory("dotnet", combineInternal, true);
             }
         }
         else
         {
-            APKAssetManager.SaveItemToDirectory("dotnet", combine, true);
+            APKAssetManager.SaveItemToDirectory("dotnet", combineInternal, true);
         }
 
-        DotnetDir = combineDotnet;
+        DotnetDir = Path.Combine(combineDotnet);
+
 
 
     }

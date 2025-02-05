@@ -19,10 +19,14 @@ internal static partial class Dotnet
         StringMarshalling.Utf8;
 #endif
 
+    
+    [DllImport("libdl.so")]
+    public static extern IntPtr dlopen(string filename, int flags);
+    [DllImport("libdl.so")]
+    public static extern IntPtr dlerror();
     public static bool LoadHostfxr()
     {
         var path = GetHostfxrPath();
-        MelonDebug.Log(NativeLibrary.TryLoad(path, out _).ToString());
         return path != null && NativeLibrary.TryLoad(path, out _);
     }
 

@@ -82,11 +82,13 @@ namespace MelonLoader
         internal static extern IntPtr GetProcAddress(IntPtr hModule, string lpProcName);
         [DllImport("kernel32")]
         internal static extern IntPtr FreeLibrary(IntPtr hModule);
+        //TODO SET #IF FOR ANDROID
 #elif LINUX
-        [DllImport("libdl.so.2")]
+        [DllImport("libdl.so")]
+        
         protected static extern IntPtr dlopen(string filename, int flags);
 
-        [DllImport("libdl.so.2")]
+        [DllImport("libdl.so")]
         protected static extern IntPtr dlsym(IntPtr handle, string symbol);
 
         const int RTLD_NOW = 2; // for dlopen's flags 
