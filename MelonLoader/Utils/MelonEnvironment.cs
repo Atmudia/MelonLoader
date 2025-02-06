@@ -7,20 +7,30 @@ namespace MelonLoader.Utils
     public static class MelonEnvironment
     {
         private const string OurRuntimeName =
-#if !NET6_0
-            "net35";
-#else
+#if NET6_0
             "net6";
+#elif NET8_0
+            "net8";
+#else
+            "net35";
 #endif
 
-        public static bool IsDotnetRuntime { get; } = OurRuntimeName == "net6";
+        public static bool IsDotnetRuntime { get; } = OurRuntimeName == "net6" || OurRuntimeName == "net8";
         public static bool IsMonoRuntime { get; } = !IsDotnetRuntime;
 
         public static string MelonBaseDirectory => LoaderConfig.Current.Loader.BaseDirectory;
 
         public static string GameExecutablePath { get; } = Process.GetCurrentProcess().MainModule.FileName;
-        public static string MelonLoaderDirectory { get; } = Path.Combine(MelonBaseDirectory, "MelonLoader");
-        public static string GameRootDirectory { get; } = Path.GetDirectoryName(GameExecutablePath);
+            
+        public static string MelonLoaderDirectory { get; set; } = Path.Combine(MelonBaseDirectory, "MelonLoader");
+        public static string GameRootDirectory { get; set; } = 
+            
+#if ANDROID
+            MelonBaseDirectory;
+#else
+            Path.GetDirectoryName(GameExecutablePath);;
+#endif
+        
 
 
         public static string DependenciesDirectory { get; } = Path.Combine(MelonLoaderDirectory, "Dependencies");
@@ -35,7 +45,13 @@ namespace MelonLoader.Utils
         public static string OurRuntimeDirectory { get; } = Path.Combine(MelonLoaderDirectory, OurRuntimeName);
 
         public static string GameExecutableName { get; } = Path.GetFileNameWithoutExtension(GameExecutablePath);
-        public static string UnityGameDataDirectory { get; } = Path.Combine(GameRootDirectory, GameExecutableName + "_Data");
+        public static string UnityGameDataDirectory { get; } = 
+#if ANDROID
+            "bin/Data/";
+#else
+            Path.Combine(GameRootDirectory, GameExecutableName + "_Data");;;
+#endif
+            
         public static string UnityGameManagedDirectory { get; } = Path.Combine(UnityGameDataDirectory, "Managed");
         public static string Il2CppDataDirectory { get; } = Path.Combine(UnityGameDataDirectory, "il2cpp_data");
         public static string UnityPlayerPath { get; } = Path.Combine(GameRootDirectory, "UnityPlayer.dll");

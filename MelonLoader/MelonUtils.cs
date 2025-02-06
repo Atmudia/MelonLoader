@@ -103,9 +103,9 @@ namespace MelonLoader
 
         public static PlatformID GetPlatform => Environment.OSVersion.Platform;
 
-        public static bool IsUnix => GetPlatform is PlatformID.Unix;
-        public static bool IsWindows => GetPlatform is PlatformID.Win32NT or PlatformID.Win32S or PlatformID.Win32Windows or PlatformID.WinCE;
-        public static bool IsMac => GetPlatform is PlatformID.MacOSX;
+        public static bool IsUnix => true;
+        public static bool IsWindows => false;
+        public static bool IsMac => false;
 
         public static void SetCurrentDomainBaseDirectory(string dirpath, AppDomain domain = null)
         {
@@ -487,10 +487,9 @@ namespace MelonLoader
 #endif
 
 
-        public static bool IsGameIl2Cpp() => Directory.Exists(MelonEnvironment.Il2CppDataDirectory);
+        public static bool IsGameIl2Cpp() => true;
 
-        public static bool IsOldMono() => File.Exists(MelonEnvironment.UnityGameDataDirectory + "\\Mono\\mono.dll") || 
-                                          File.Exists(MelonEnvironment.UnityGameDataDirectory + "\\Mono\\libmono.so");
+        public static bool IsOldMono() => false;
 
         public static bool IsUnderWineOrSteamProton() => WineGetVersion is not null;
 

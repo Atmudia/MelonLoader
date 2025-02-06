@@ -12,7 +12,7 @@ internal class Il2CppLib(Il2CppLib.MethodGetNameFn methodGetName)
 #elif LINUX
         "GameAssembly.so";
 #else
-            "libil2cpp.so";
+         "libil2cpp.so";
 
 #endif
 
@@ -23,8 +23,6 @@ internal class Il2CppLib(Il2CppLib.MethodGetNameFn methodGetName)
 
     public static Il2CppLib? TryLoad()
     {
-        
-        
         if (!NativeLibrary.TryLoad(libName, out var hRuntime)
             || !NativeLibrary.TryGetExport(hRuntime, "il2cpp_init", out var initPtr)
             || !NativeLibrary.TryGetExport(hRuntime, "il2cpp_runtime_invoke", out var runtimeInvokePtr)

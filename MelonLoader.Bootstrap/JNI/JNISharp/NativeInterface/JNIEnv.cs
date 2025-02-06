@@ -1,4 +1,6 @@
-﻿namespace JNISharp.NativeInterface;
+﻿using MelonLoader.Bootstrap.Proxy.Android;
+
+namespace JNISharp.NativeInterface;
 
 using System;
 using System.Runtime.InteropServices;
@@ -655,6 +657,7 @@ internal readonly unsafe struct JNIEnv
         internal readonly delegate* unmanaged[Stdcall]<JNIEnv*, IntPtr, int, int, double*, void> SetDoubleArrayRegion;
 
 // jint (JNICALL *RegisterNatives) (JNIEnv* env, jclass clazz, const JNINativeMethod* methods, jint nMethods);
+        // internal readonly delegate* unmanaged[Stdcall]<JNIEnv*, IntPtr, AndroidProxy.JNINativeMethod*, int, int> RegisterNatives;
         internal readonly delegate* unmanaged[Stdcall]<JNIEnv*, IntPtr, IntPtr, int, int> RegisterNatives;
 
         // jint (JNICALL *UnregisterNatives) (JNIEnv* env, jclass clazz);

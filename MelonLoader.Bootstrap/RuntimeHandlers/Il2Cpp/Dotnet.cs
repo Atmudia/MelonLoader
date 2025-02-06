@@ -20,10 +20,6 @@ internal static partial class Dotnet
 #endif
 
     
-    [DllImport("libdl.so")]
-    public static extern IntPtr dlopen(string filename, int flags);
-    [DllImport("libdl.so")]
-    public static extern IntPtr dlerror();
     public static bool LoadHostfxr()
     {
         var path = GetHostfxrPath();
@@ -32,9 +28,9 @@ internal static partial class Dotnet
 
     private static string? GetHostfxrPath()
     {
-        #if ANDROID
+#if ANDROID
 
-        return Path.Combine(AndroidProxy.DotnetDir, "host", "fxr", "8.0.6", "libhostfxr.so");
+        return Path.Combine(AndroidBootstrap.DotnetDir, "host", "fxr", "8.0.6", "libhostfxr.so");
 #else
         var buffer = new StringBuilder(1024);
         var bufferSize = (nint)buffer.Capacity;

@@ -1,9 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using JNISharp.NativeInterface;
+﻿using JNISharp.NativeInterface;
 
-namespace MelonLoader.Utils;
+namespace MelonLoader.Bootstrap.Proxy.Android;
 
 public static class APKAssetManager
 {

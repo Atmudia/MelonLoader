@@ -78,6 +78,7 @@ namespace MelonLoader.Utils
 
         internal static bool CheckAssembly(ModuleDefinition image)
         {
+            return true;
             // string imageName = image.Name;
 
             var moduleCount = image.Assembly!.Modules.Count;

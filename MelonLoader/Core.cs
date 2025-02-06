@@ -30,6 +30,10 @@ namespace MelonLoader
             var config = new LoaderConfig();
             BootstrapInterop.Library.GetLoaderConfig(ref config);
             LoaderConfig.Current = config;
+            var runtimeFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!;
+            var runtimeDirInfo = new DirectoryInfo(runtimeFolder);
+            MelonEnvironment.MelonLoaderDirectory = runtimeDirInfo.Parent!.FullName;
+            MelonEnvironment.GameRootDirectory = runtimeDirInfo.Parent!.Parent!.FullName;
 
             MelonLaunchOptions.Load();
 
@@ -37,15 +41,17 @@ namespace MelonLoader
             // Disabled for now because of issues
             //Net20Compatibility.TryInstall();
 #endif
-
+            
+#if !ANDROID
             MelonUtils.SetupWineCheck();
+#endif
 
             if (MelonUtils.IsUnderWineOrSteamProton())
                 Pastel.ConsoleExtensions.Disable();
 
             Fixes.UnhandledException.Install(AppDomain.CurrentDomain);
 
-#if NET35
+#if NET35 
             Fixes.ServerCertificateValidation.Install();
 #endif
 
@@ -87,7 +93,9 @@ namespace MelonLoader
 #endif
 
             HarmonyInstance = new HarmonyLib.Harmony(BuildInfo.Name);
+#if !ANDROID
             Fixes.DetourContextDisposeFix.Install();
+#endif
 
 #if NET6_0_OR_GREATER
             // if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

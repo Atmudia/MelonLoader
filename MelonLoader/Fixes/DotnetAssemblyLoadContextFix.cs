@@ -29,13 +29,15 @@ namespace MelonLoader.Fixes
             {
                 Core.HarmonyInstance.Patch(AccessTools.Method(typeof(Assembly), nameof(Assembly.Load), new Type[] { typeof(byte[]), typeof(byte[]) }), new HarmonyMethod(typeof(DotnetAssemblyLoadContextFix), nameof(PreAssemblyLoad)));
                 Core.HarmonyInstance.Patch(AccessTools.Method(typeof(Assembly), nameof(Assembly.LoadFile)), new HarmonyMethod(typeof(DotnetAssemblyLoadContextFix), nameof(PreAssemblyLoadFile)));
-
+                
                 //We have to load everything required for the verifier to avoid getting stuck in an infinite loop, prior to hooking AssemblyLoadContext.
                 AssemblyVerifier.EnsureInitialized();
 
                 //Now hook ALC.
+                #if !ANDROID
                 Core.HarmonyInstance.Patch(AlcQCallLoadFromPath, new HarmonyMethod(typeof(DotnetAssemblyLoadContextFix), nameof(PreAlcLoadFromPath)));
                 Core.HarmonyInstance.Patch(AlcQCallLoadFromStream, new HarmonyMethod(typeof(DotnetAssemblyLoadContextFix), nameof(PreAlcLoadFromStream)));
+                #endif 
             }
             catch (Exception ex) { MelonLogger.Warning($"DotnetAssemblyLoadContextFix Exception: {ex}"); }
         }
@@ -43,7 +45,7 @@ namespace MelonLoader.Fixes
         public static bool PreAssemblyLoad(byte[] rawAssembly, byte[] rawSymbolStore, ref Assembly __result)
         {
             //if(MelonDebug.IsEnabled() && !Environment.StackTrace.Contains("HarmonyLib"))
-            //    MelonDebug.Msg($"[.NET AssemblyLoadContext Fix] Redirecting Assembly.Load call with {rawAssembly.Length}-byte assembly to AssemblyLoadContext.Default. Mod Devs: You may wish to use this explictly.");
+            // MelonDebug.Msg($"[.NET AssemblyLoadContext Fix] Redirecting Assembly.Load call with {rawAssembly.Length}-byte assembly to AssemblyLoadContext.Default. Mod Devs: You may wish to use this explictly.");
 
             var (ok, reason) = AssemblyVerifier.VerifyByteArray(rawAssembly);
             if (!ok)
@@ -59,7 +61,7 @@ namespace MelonLoader.Fixes
 
         public static bool PreAssemblyLoadFile(string path, ref Assembly __result)
         {
-            //MelonDebug.Msg($"[.NET AssemblyLoadContext Fix] Redirecting Assembly.LoadFile({path}) call to AssemblyLoadContext.Default.LoadFromAssemblyPath. Mod Devs: You may wish to use this explictly.");
+            // MelonDebug.Msg($"[.NET AssemblyLoadContext Fix] Redirecting Assembly.LoadFile({path}) call to AssemblyLoadContext.Default.LoadFromAssemblyPath. Mod Devs: You may wish to use this explictly.");
 
             string normalizedPath = Path.GetFullPath(path);
 

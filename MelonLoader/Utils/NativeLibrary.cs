@@ -58,7 +58,7 @@ namespace MelonLoader
         {
 #if WINDOWS
             return LoadLibrary(name);
-#elif LINUX
+#elif LINUX || ANDROID
             if (!Path.HasExtension(name))
                 name += ".so";
             
@@ -70,7 +70,7 @@ namespace MelonLoader
         {
 #if WINDOWS
             return GetProcAddress(hModule, lpProcName);
-#elif LINUX
+#elif LINUX || ANDROID
             return dlsym(hModule, lpProcName);
 #endif
         }
@@ -82,16 +82,22 @@ namespace MelonLoader
         internal static extern IntPtr GetProcAddress(IntPtr hModule, string lpProcName);
         [DllImport("kernel32")]
         internal static extern IntPtr FreeLibrary(IntPtr hModule);
-        //TODO SET #IF FOR ANDROID
-#elif LINUX
-        [DllImport("libdl.so")]
+#elif LINUX || ANDROID
+        private const string DLLName =
+    #if LINUX
+            "libdl.so.2";
+    #else
+            "libdl.so";
+    #endif
         
+        [DllImport(DLLName)]
         protected static extern IntPtr dlopen(string filename, int flags);
 
-        [DllImport("libdl.so")]
+        [DllImport(DLLName)]
         protected static extern IntPtr dlsym(IntPtr handle, string symbol);
 
         const int RTLD_NOW = 2; // for dlopen's flags 
+        
 #endif
         
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]

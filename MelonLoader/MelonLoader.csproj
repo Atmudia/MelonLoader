@@ -17,6 +17,12 @@
         <PackageProjectUrl>https://github.com/LavaGang/MelonLoader</PackageProjectUrl>
         <Description>The World's First Universal Mod Loader for Unity Games compatible with both Il2Cpp and Mono.</Description>
     </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DefineConstants>;X64;ANDROID;TRACE</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DefineConstants>;X64;ANDROID;TRACE</DefineConstants>
+    </PropertyGroup>
     <ItemDefinitionGroup>
         <PackageReference>
             <PrivateAssets>all</PrivateAssets>

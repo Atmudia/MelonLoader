@@ -13,6 +13,13 @@ internal static class Il2CppHandler
 
     private static Il2CppLib il2cpp = null!;
 
+    private const string NetVersion =
+#if !ANDROID
+        "net6";
+#else
+        "net8";
+#endif
+
     public static bool TryInitialize()
     {
         var il2cppLib = Il2CppLib.TryLoad();
@@ -43,9 +50,9 @@ internal static class Il2CppHandler
         return domain;
     }
 
-    private static unsafe void InitializeManaged()
+    private static void InitializeManaged()
     {
-        var managedDir = Path.Combine(LoaderConfig.Current.Loader.BaseDirectory, "MelonLoader", "net8");
+        var managedDir = Path.Combine(LoaderConfig.Current.Loader.BaseDirectory, "MelonLoader", NetVersion);
         var runtimeConfigPath = Path.Combine(managedDir, "MelonLoader.runtimeconfig.json");
         var nativeHostPath = Path.Combine(managedDir, "MelonLoader.NativeHost.dll");
 
