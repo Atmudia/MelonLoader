@@ -1,11 +1,11 @@
 ﻿using System;
 using UnityEngine;
+using System.Reflection;
 
 #if SM_Il2Cpp
 using Il2CppInterop.Runtime;
 #else
 using System.Linq;
-using System.Reflection;
 #endif
 
 namespace MelonLoader.Support
@@ -15,12 +15,11 @@ namespace MelonLoader.Support
         private static bool _failure;
 
 #if SM_Il2Cpp
-        private delegate void SetAsLastSiblingDelegate(IntPtr transformptr);
+        // private delegate void SetAsLastSiblingDelegate(Transform obj);
 #else
         private static MethodInfo _methodInfo;
-        private delegate void SetAsLastSiblingDelegate(Transform obj);
 #endif
-
+        private delegate void SetAsLastSiblingDelegate(Transform obj);
         private static SetAsLastSiblingDelegate _method;
 
         internal static void SetAsLastSibling(Component obj)
@@ -74,8 +73,8 @@ namespace MelonLoader.Support
             try
             {
 #if SM_Il2Cpp
-                _method(IL2CPP.Il2CppObjectBaseToPtrNotNull(obj.transform));
-                _method(IL2CPP.Il2CppObjectBaseToPtrNotNull(obj.gameObject.transform));
+                _method(obj.transform);
+                _method(obj.gameObject.transform);
 #else
                 _method(obj.transform);
                 _method(obj.gameObject.transform);

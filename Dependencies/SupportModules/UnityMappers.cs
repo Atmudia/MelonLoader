@@ -1,3 +1,8 @@
+#if SM_Il2Cpp
+using Il2CppSystem;
+#else
+using System;
+#endif
 using Tomlet;
 using Tomlet.Models;
 using UnityEngine;
@@ -40,7 +45,7 @@ namespace MelonLoader.Support.Preferences
 
         private static TomlValue WriteColor32(Color32 value)
         {
-            byte[] bytes = new[] { value.r, value.g, value.b, value.a };
+            Byte[] bytes = new Byte[] { value.r, value.g, value.b, value.a };
             return MelonPreferences.Mapper.WriteArray(bytes);
         }
 
@@ -54,7 +59,7 @@ namespace MelonLoader.Support.Preferences
 
         private static TomlValue WriteVector2(Vector2 value)
         {
-            float[] floats = new[] { value.x, value.y };
+            Single[] floats = new[] { value.x, value.y };
             return MelonPreferences.Mapper.WriteArray(floats);
         }
 
@@ -68,7 +73,7 @@ namespace MelonLoader.Support.Preferences
 
         private static TomlValue WriteVector3(Vector3 value)
         {
-            float[] floats = new[] { value.x, value.y, value.z };
+            Single[] floats = new[] { value.x, value.y, value.z };
             return MelonPreferences.Mapper.WriteArray(floats);
         }
 
@@ -82,7 +87,7 @@ namespace MelonLoader.Support.Preferences
 
         private static TomlValue WriteVector4(Vector4 value)
         {
-            float[] floats = new[] { value.x, value.y, value.z, value.w };
+            Single[] floats = new[] { value.x, value.y, value.z, value.w };
             return MelonPreferences.Mapper.WriteArray(floats);
         }
 
@@ -96,7 +101,7 @@ namespace MelonLoader.Support.Preferences
 
         private static TomlValue WriteQuaternion(Quaternion value)
         {
-            float[] floats = new[] { value.x, value.y, value.z, value.w };
+            Single[] floats = new[] { value.x, value.y, value.z, value.w };
             return MelonPreferences.Mapper.WriteArray(floats);
         }
     }

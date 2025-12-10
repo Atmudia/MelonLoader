@@ -2,18 +2,23 @@
 
 #if SM_Il2Cpp
 using System;
+using Il2CppInterop.Common;
 using Il2CppInterop.Runtime;
 using Il2CppInterop.Runtime.Injection;
+using Il2CppInterop.Runtime.InteropTypes;
 #endif
 
 namespace MelonLoader.Support
 {
     internal class SM_Component : MonoBehaviour
+#if SM_Il2Cpp
+        , IIl2CppType<SM_Component>
+#endif
     {
         private bool isQuitting;
 
 #if SM_Il2Cpp
-        public SM_Component(IntPtr value) : base(value) { }
+        public SM_Component(ObjectPointer value) : base(value) { }
 #endif
 
         internal static void Create()
@@ -29,7 +34,7 @@ namespace MelonLoader.Support
 
 #if SM_Il2Cpp
             ClassInjector.RegisterTypeInIl2Cpp<SM_Component>();
-            Main.component = Main.obj.AddComponent(Il2CppType.Of<SM_Component>()).TryCast<SM_Component>();
+            Main.component = Main.obj.AddComponent<SM_Component>();
 #else
             Main.component = (SM_Component)Main.obj.AddComponent(typeof(SM_Component));
 #endif
@@ -46,7 +51,7 @@ namespace MelonLoader.Support
 
             foreach (var queuedCoroutine in MelonCoroutines._queue)
 #if SM_Il2Cpp
-                StartCoroutine(new Il2CppSystem.Collections.IEnumerator(new MonoEnumeratorWrapper(queuedCoroutine).Pointer));
+                // StartCoroutine(new Il2CppSystem.Collections.IEnumerator(new MonoEnumeratorWrapper(queuedCoroutine).Pointer));
 #else
                 StartCoroutine(queuedCoroutine);
 #endif
@@ -131,5 +136,20 @@ namespace MelonLoader.Support
 
             Main.Interface.OnGUI();
         }
+
+#if SM_Il2Cpp
+        public static void WriteToSpan(SM_Component value, Span<byte> span)
+        {
+            
+        }
+
+        public static SM_Component ReadFromSpan(ReadOnlySpan<byte> span)
+        {
+            return null;   
+        }
+        
+
+        public static int Size { get; }
+#endif
     }
 }

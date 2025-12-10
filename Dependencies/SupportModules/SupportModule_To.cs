@@ -15,7 +15,8 @@ namespace MelonLoader.Support
             }
 
 #if SM_Il2Cpp
-            return Main.component.StartCoroutine(new Il2CppSystem.Collections.IEnumerator(new MonoEnumeratorWrapper(coroutine).Pointer));
+            return null;
+            // return Main.component.StartCoroutine(new Il2CppSystem.Collections.IEnumerator(new MonoEnumeratorWrapper(coroutine).Pointer));
 #else
             return Main.component.StartCoroutine(coroutine);
 #endif
@@ -30,9 +31,15 @@ namespace MelonLoader.Support
                 return;
             }
 
-            Main.component.StopCoroutine(coroutineToken as Coroutine);
+            
+            // Main.component.StopCoroutine(coroutineToken as Coroutine);
         }
 
-        public void UnityDebugLog(string msg) => Debug.Log(msg);
+        public void UnityDebugLog(string msg) => 
+            #if SM_Il2Cpp
+            Debug.Log((Il2CppSystem.String)msg);
+        #else
+        Debug.Log(msg);
+        #endif
     }
 }

@@ -1,8 +1,8 @@
-﻿using Il2CppInterop.HarmonySupport;
-using Il2CppInterop.Runtime.Injection;
+﻿using Il2CppInterop.Runtime.Injection;
 using Il2CppInterop.Runtime.Startup;
 using MelonLoader.Support.Preferences;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using MelonLoader.CoreClrUtils;
@@ -11,7 +11,10 @@ using Il2CppInterop.Common;
 using Microsoft.Extensions.Logging;
 using MelonLoader.Utils;
 using System.IO;
+using Il2CppInterop.HarmonySupport;
 using MelonLoader.InternalUtils;
+using MonoMod.Core;
+using MonoMod.RuntimeDetour;
 
 [assembly: MelonLoader.PatchShield]
 
@@ -47,6 +50,8 @@ namespace MelonLoader.Support
                     MacOsIl2CppInteropLibraryResolver);
             }
 
+            DetourContext.SetGlobalContext(new DetourFactoryContext(new Il2CppInteropDetourFactory()));
+
             Il2CppInteropRuntime runtime = Il2CppInteropRuntime.Create(new()
             {
                 DetourProvider = new MelonDetourProvider(),
@@ -54,17 +59,17 @@ namespace MelonLoader.Support
                     InternalUtils.UnityInformationHandler.EngineVersion.Major,
                     InternalUtils.UnityInformationHandler.EngineVersion.Minor,
                     InternalUtils.UnityInformationHandler.EngineVersion.Build)
-            }).AddLogger(new InteropLogger())
-              .AddHarmonySupport();
-
+            }).AddLogger(new InteropLogger());
             Interop = new InteropInterface();
             Interface.SetInteropSupportInterface(Interop);
             runtime.Start();
 
+            Il2CppInterop.Initialization.Il2CppInitialization.Initialize();
+
             if (!LoaderConfig.Current.UnityEngine.DisableConsoleLogCleaner)
                 ConsoleCleaner();
 
-            MonoEnumeratorWrapper.Register();
+            // MonoEnumeratorWrapper.Register();
 
             GetSceneManagerMethods(out MethodInfo sceneLoaded,
                 out MethodInfo sceneUnloaded);
@@ -194,73 +199,24 @@ namespace MelonLoader.Support
 
     internal sealed class MelonDetourProvider : IDetourProvider
     {
-        public IDetour Create<TDelegate>(nint original, TDelegate target) where TDelegate : Delegate
+        private static readonly List<object> s_keepAlive = new();
+        public IDisposable Create<TDelegate>(nint original, TDelegate target, out TDelegate trampoline)
+            where TDelegate : Delegate
         {
-            return new MelonDetour(original, target);
-        }
+            var detour =
+                DetourContext.CurrentFactory!.CreateNativeDetour(original, Marshal.GetFunctionPointerForDelegate(target));
 
-        private sealed class MelonDetour : IDetour
-        {
-            private nint _detourFrom;
-            private nint _originalPtr;
-            
-            private Delegate _target;
-            private IntPtr _targetPtr;
-
-            /// <summary>
-            /// Original method
-            /// </summary>
-            public nint Target => _detourFrom;
-
-            public nint Detour => _targetPtr;
-            public nint OriginalTrampoline => _originalPtr;
-            
-            public MelonDetour(nint detourFrom, Delegate target)
+            if (!detour.HasOrigEntrypoint)
             {
-                _detourFrom = detourFrom;
-                _target = target;
-
-                // We have to apply immediately because we're gonna be asked for a trampoline right away
-                Apply();
+                throw new Exception("HasOrigEntrypoint has to be true");
             }
 
-            public unsafe void Apply()
-            {
-                if (_targetPtr != IntPtr.Zero)
-                    return;
+            trampoline = Marshal.GetDelegateForFunctionPointer<TDelegate>(detour.OrigEntrypoint);
 
-                _targetPtr = Marshal.GetFunctionPointerForDelegate(_target);
-                
-                var addr = _detourFrom;
-                nint addrPtr = (nint)(&addr);
-                BootstrapInterop.NativeHookAttachDirect(addrPtr, _targetPtr);
-                NativeStackWalk.RegisterHookAddr((ulong)addrPtr, $"Il2CppInterop detour of 0x{addrPtr:X} -> 0x{_targetPtr:X}");
+            // monomod reorg undoes the hook on finalizer which is very stupid
+            s_keepAlive.Add(detour);
 
-                _originalPtr = addr;
-            }
-
-            public unsafe void Dispose()
-            {
-                if (_targetPtr == IntPtr.Zero)
-                    return;
-
-                var addr = _detourFrom;
-                nint addrPtr = (nint)(&addr);
-
-                BootstrapInterop.NativeHookDetach(addrPtr, _targetPtr);
-                NativeStackWalk.UnregisterHookAddr((ulong)addrPtr);
-
-                _targetPtr = IntPtr.Zero;
-                _originalPtr = IntPtr.Zero;
-            }
-
-            public T GenerateTrampoline<T>()
-                where T : Delegate
-            {
-                if (_originalPtr == IntPtr.Zero)
-                    return null;
-                return Marshal.GetDelegateForFunctionPointer<T>(_originalPtr);
-            }
+            return detour;
         }
     }
 

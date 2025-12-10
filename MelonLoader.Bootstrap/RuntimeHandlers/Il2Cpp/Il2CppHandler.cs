@@ -49,7 +49,7 @@ internal static class Il2CppHandler
 
     private static void InitializeManaged()
     {
-        var managedDir = Path.Combine(LoaderConfig.Current.Loader.BaseDirectory, "MelonLoader", "net6");
+        var managedDir = Path.Combine(LoaderConfig.Current.Loader.BaseDirectory, "MelonLoader", "net10.0");
         var runtimeConfigPath = Path.Combine(managedDir, "MelonLoader.runtimeconfig.json");
         var nativeHostPath = Path.Combine(managedDir, "MelonLoader.NativeHost.dll");
 

@@ -19,8 +19,8 @@ namespace MelonLoader.Fixes.Harmony
             }
             catch (Exception ex) { MelonLogger.Warning(ex); }
 
-            Hook.OnDetour += (detour, originalMethod, patchMethod, delegateTarget) => PatchMethod(patchMethod);
-            Detour.OnDetour += (detour, originalMethod, patchMethod) => PatchMethod(patchMethod);
+            // Hook.OnDetour += (detour, originalMethod, patchMethod, delegateTarget) => PatchMethod(patchMethod);
+            // Detour.OnDetour += (detour, originalMethod, patchMethod) => PatchMethod(patchMethod);
         }
 
         private static bool PatchMethod(MethodBase __0)

@@ -6,13 +6,13 @@ namespace MelonLoader.Utils
     public static class MelonEnvironment
     {
         private const string OurRuntimeName =
-#if !NET6_0
+#if !NET6_0_OR_GREATER
             "net35";
 #else
-            "net6";
+            "net10.0";
 #endif
 
-        public static bool IsDotnetRuntime { get; } = OurRuntimeName == "net6";
+        public static bool IsDotnetRuntime { get; } = OurRuntimeName == "net10.0";
         public static bool IsMonoRuntime { get; } = !IsDotnetRuntime;
 
         public static string MelonBaseDirectory => LoaderConfig.Current.Loader.BaseDirectory;

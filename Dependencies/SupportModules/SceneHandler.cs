@@ -52,17 +52,27 @@ namespace MelonLoader.Support
 
             if (ReferenceEquals(scene, null))
                 return;
-
-            Main.Interface.OnSceneWasLoaded(scene.buildIndex, scene.name);
-            scenesLoaded.Enqueue(new SceneInitEvent { buildIndex = scene.buildIndex, name = scene.name });
+            int buildIndex =
+#if SM_Il2Cpp
+                0;
+#else
+                scene.buildIndex;
+#endif
+            Main.Interface.OnSceneWasLoaded(buildIndex, scene.name);
+            scenesLoaded.Enqueue(new SceneInitEvent { buildIndex = buildIndex, name = scene.name });
         }
 
         private static void OnSceneUnload(Scene scene)
         {
             if (ReferenceEquals(scene, null))
                 return;
-
-            Main.Interface.OnSceneWasUnloaded(scene.buildIndex, scene.name);
+            int buildIndex =
+#if SM_Il2Cpp
+                0;
+#else
+                scene.buildIndex;
+#endif
+            Main.Interface.OnSceneWasUnloaded(buildIndex, scene.name);
         }
 
         internal static void OnUpdate()

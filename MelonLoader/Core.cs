@@ -10,7 +10,6 @@ using MelonLoader.Utils;
 using MelonLoader.InternalUtils;
 using MelonLoader.Melons;
 using MonoMod.RuntimeDetour;
-using MonoMod.RuntimeDetour.Platforms;
 
 [assembly: MelonLoader.PatchShield]
 
@@ -140,20 +139,20 @@ namespace MelonLoader
 #if NET6_0_OR_GREATER
 
             Fixes.AsmResolver.AsmResolverUtf8StringConcatFix.Install();
-            Fixes.Il2CppInterop.Il2CppInteropUnmangleMethodNameFix.Install();
+            // Fixes.Il2CppInterop.Il2CppInteropUnmangleMethodNameFix.Install();
 
-            Fixes.Il2CppInterop.Il2CppInteropExceptionLog.Install();
+            // Fixes.Il2CppInterop.Il2CppInteropExceptionLog.Install();
 
 #if OSX
             Fixes.Il2CppInterop.Il2CppInteropMacFix.Install();
             Fixes.Dotnet.NativeLibraryFix.Install();
 #endif
 
-            Fixes.Il2CppInterop.Il2CppInteropFixes.Install();
-            Fixes.Il2CppInterop.Il2CppInteropGetFieldDefaultValueFix.Install();
-            Fixes.Il2CppInterop.Il2CppInteropGenericMethodGetMethodFix.Install();
+            // Fixes.Il2CppInterop.Il2CppInteropFixes.Install();
+            // Fixes.Il2CppInterop.Il2CppInteropGetFieldDefaultValueFix.Install();
+            // Fixes.Il2CppInterop.Il2CppInteropGenericMethodGetMethodFix.Install();
 
-            Fixes.Il2CppInterop.Il2CppICallInjector.Install();
+            // Fixes.Il2CppInterop.Il2CppICallInjector.Install();
 
 #endif
 
@@ -271,8 +270,8 @@ namespace MelonLoader
             bHapticsManager.Disconnect();
 
 #if NET6_0_OR_GREATER
-            Fixes.Il2CppInterop.Il2CppInteropFixes.Shutdown();
-            Fixes.Il2CppInterop.Il2CppICallInjector.Shutdown();
+            // Fixes.Il2CppInterop.Il2CppInteropFixes.Shutdown();
+            // Fixes.Il2CppInterop.Il2CppICallInjector.Shutdown();
 #endif
 
             Thread.Sleep(200);

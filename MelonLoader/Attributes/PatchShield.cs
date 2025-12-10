@@ -50,9 +50,9 @@ namespace MelonLoader
 			}
 			catch (Exception ex) { LogException(ex); }
 
-			Hook.OnDetour += (detour, originalMethod, patchMethod, delegateTarget) => MethodCheck(originalMethod);
-			ILHook.OnDetour += (detour, originalMethod, ilmanipulator) => MethodCheck(originalMethod);
-			Detour.OnDetour += (detour, originalMethod, patchMethod) => MethodCheck(originalMethod);
+			// Hook.OnDetour += (detour, originalMethod, patchMethod, delegateTarget) => MethodCheck(originalMethod);
+			// ILHook.OnDetour += (detour, originalMethod, ilmanipulator) => MethodCheck(originalMethod);
+			// Detour.OnDetour += (detour, originalMethod, patchMethod) => MethodCheck(originalMethod);
 		}
 
 		private static bool PatchMethod_PatchFunctions_ReversePatch(MethodBase __1) => MethodCheck(__1);
