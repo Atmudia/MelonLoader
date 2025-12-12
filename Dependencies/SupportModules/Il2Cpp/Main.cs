@@ -5,14 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using MelonLoader.CoreClrUtils;
 using UnityEngine;
 using Il2CppInterop.Common;
 using Microsoft.Extensions.Logging;
 using MelonLoader.Utils;
 using System.IO;
 using Il2CppInterop.HarmonySupport;
-using MelonLoader.InternalUtils;
 using MonoMod.Core;
 using MonoMod.RuntimeDetour;
 
@@ -64,13 +62,12 @@ namespace MelonLoader.Support
             Interface.SetInteropSupportInterface(Interop);
             runtime.Start();
 
-            Il2CppInterop.Initialization.Il2CppInitialization.Initialize();
 
+            Il2CppInterop.Initialization.Il2CppInitialization.Initialize();
             if (!LoaderConfig.Current.UnityEngine.DisableConsoleLogCleaner)
                 ConsoleCleaner();
 
             // MonoEnumeratorWrapper.Register();
-
             GetSceneManagerMethods(out MethodInfo sceneLoaded,
                 out MethodInfo sceneUnloaded);
             if (sceneLoaded == null)
@@ -228,27 +225,31 @@ namespace MelonLoader.Support
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception,
             Func<TState, Exception, string> formatter)
         {
-            string formattedTxt = formatter(state, exception);
+            var logLine = state.ToString() ?? string.Empty;
+
+            if (exception != null)
+                logLine += $"\n{exception}";
+            
             switch (logLevel)
             {
                 case LogLevel.Debug:
                 case LogLevel.Trace:
-                    MelonDebug.Msg(formattedTxt);
+                    MelonDebug.Msg(logLine);
                     break;
 
                 case LogLevel.Critical:
                 case LogLevel.Error:
-                    _logger.Error(formattedTxt);
+                    _logger.Error(logLine);
                     break;
 
                 case LogLevel.Warning:
-                    _logger.Warning(formattedTxt);
+                    _logger.Warning(logLine);
                     break;
 
                 case LogLevel.Information:
                 case LogLevel.None:
                 default:
-                    _logger.Msg(formattedTxt);
+                    _logger.Msg(logLine);
                     break;
             }
         }
