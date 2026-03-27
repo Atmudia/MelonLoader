@@ -3,11 +3,10 @@
 		Project
 	-->
     <PropertyGroup>
-        <Version>0.7.2</Version>
-        <AppHostVersion>10.0.0-rc.2.25502.107</AppHostVersion>
+        <Version>0.7.3</Version>
+        <AppHostVersion>10.0.3</AppHostVersion>
 		
         <BootstrapTarget>net9</BootstrapTarget>
-        <ForceRID>win-x64</ForceRID>
 		
         <DotNetTarget>net10.0</DotNetTarget>
 		
@@ -47,14 +46,15 @@
 	-->
     <PropertyGroup>
         <IcedVersion>1.21.0</IcedVersion>
-        <TomletVersion>6.1.0</TomletVersion>
-        <PastelVersion>7.0.0</PastelVersion>
+        <TomletVersion>6.2.0</TomletVersion>
+        <PastelVersion>7.0.1</PastelVersion>
         <MonoModVersion>22.7.31.1</MonoModVersion>
         <MonoModRuntimeDetour>25.3.3</MonoModRuntimeDetour>
         <MonoModUtils>25.0.11</MonoModUtils>
         <MonoCecilVersion>0.11.6</MonoCecilVersion>
+        <HarmonyXVersion>2.10.2</HarmonyXVersion>
+        <AssetToolsVersion>3.0.4</AssetToolsVersion>
         <HarmonyXVersion>2.16.0</HarmonyXVersion>
-        <AssetToolsVersion>3.0.0-preview3</AssetToolsVersion>
         <AssetRipperVersion>3.2.0</AssetRipperVersion>
         <AsmResolverVersion>6.0.0-beta.3</AsmResolverVersion>
         <Il2CppInteropVersion>1.5.1</Il2CppInteropVersion>
@@ -79,12 +79,12 @@
     </PropertyGroup>
 	
 	<PropertyGroup Condition="'$(RuntimeIdentifier)' == '' And '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">
-<!--		 <RuntimeIdentifier>linux-$(Platform)</RuntimeIdentifier> -->
+		<!-- <RuntimeIdentifier>linux-$(Platform)</RuntimeIdentifier> -->
 		<RuntimeIdentifier>linux-x64</RuntimeIdentifier>
     </PropertyGroup>
 	
 	<PropertyGroup Condition="'$(RuntimeIdentifier)' == '' And '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">
-<!--		 <RuntimeIdentifier>osx-$(Platform)</RuntimeIdentifier> -->
+		<!-- <RuntimeIdentifier>osx-$(Platform)</RuntimeIdentifier> -->
 		<RuntimeIdentifier>osx-x64</RuntimeIdentifier>
     </PropertyGroup>
 	
@@ -114,7 +114,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <MLOutDir>/home/ati/.local/share/Steam/steamapps/common/Slime Rancher 2/</MLOutDir>
+        <MLOutDir>$(SolutionDir)Output/$(Configuration)/$(RuntimeIdentifier)</MLOutDir>
     </PropertyGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == '$(MonoTarget)' Or '$(TargetFramework)' == '$(MonoBleedingEdgeTarget)'">

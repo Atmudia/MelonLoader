@@ -28,9 +28,13 @@ namespace MelonLoader.Support
             => Il2CppInteropUtils.GetIl2CppMethodInfoPointerFieldForGeneratedMethod(method);
 
         public void RegisterTypeInIl2CppDomain(Type type, bool logSuccess)
-            => ClassInjector.RegisterTypeInIl2Cpp(type, new() { LogSuccess = logSuccess });
+        {
+        }
+
         public void RegisterTypeInIl2CppDomainWithInterfaces(Type type, Type[] interfaces, bool logSuccess)
-            => ClassInjector.RegisterTypeInIl2Cpp(type, new() { LogSuccess = logSuccess });
+        {
+            
+        }
 
         public bool IsInheritedFromIl2CppObjectBase(Type type)
             => (type != null) && typeof(IObject).IsAssignableFrom(type);

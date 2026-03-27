@@ -450,6 +450,9 @@ namespace MelonLoader
             foreach (var type in allTypes)
                 try
                 {
+                    if (MelonDebug.IsEnabled())
+                        LoggerInstance.Msg($"Harmony Patching {type.FullName}");
+
                     var proc = HarmonyInstance.CreateClassProcessor(type);
                     proc.Patch();
                 }

@@ -333,11 +333,11 @@ namespace MelonLoader
                 //MelonLogger.Error($"Failed to get all types in assembly {asm.FullName} due to: {ex.Message}", ex);
                 returnval = ex.Types; 
             }
-            //catch (Exception ex)
-            //{
+            catch //(Exception ex)
+            {
                 //MelonLogger.Error($"Failed to get all types in assembly {asm.FullName} due to: {ex.Message}", ex);
-            //    returnval = null;
-            //}
+                //returnval = null;
+            }
             return returnval.Where(x => (x != null) && (predicate == null || predicate(x)));
         }
 
@@ -396,17 +396,21 @@ namespace MelonLoader
         }
 
         public static void TryPatchAll(this HarmonyLib.Harmony harmony, Assembly assembly)
+            => TryPatchAll(harmony, assembly, false);
+        public static void TryPatchAll(this HarmonyLib.Harmony harmony, Assembly assembly, bool allowUnannotatedType)
         {
             var allTypes = assembly.GetValidTypes();
             foreach (var type in allTypes)
-                harmony.TryPatchAll(type);
+                harmony.TryPatchAll(type, allowUnannotatedType);
         }
 
         public static void TryPatchAll(this HarmonyLib.Harmony harmony, Type type)
+            => TryPatchAll(harmony, type, false);
+        public static void TryPatchAll(this HarmonyLib.Harmony harmony, Type type, bool allowUnannotatedType)
         {
             try
             {
-                var proc = harmony.CreateClassProcessor(type, allowUnannotatedType: true);
+                var proc = harmony.CreateClassProcessor(type, allowUnannotatedType);
                 proc.Patch();
             }
             catch
@@ -518,7 +522,7 @@ namespace MelonLoader
 
         public static void SetConsoleTitle(string title)
         {
-            if (LoaderConfig.Current.Console.DontSetTitle || !BootstrapInterop.Library.IsConsoleOpen())
+            if (!BootstrapInterop.Library.IsConsoleOpen())
                 return;
 
             // Using reflection to avoid resolver errors
@@ -667,10 +671,10 @@ namespace MelonLoader
         public static string GetManagedDirectory() => MelonEnvironment.MelonManagedDirectory;
 
         [Obsolete("Use NativeUtils.NativeHook instead. This will be removed in a future update.", true)]
-        public static void NativeHookAttach(IntPtr target, IntPtr detour) => BootstrapInterop.NativeHookAttach(target, detour);
+        public static IntPtr NativeHookAttach(IntPtr target, IntPtr detour) => BootstrapInterop.NativeHookAttach(target, detour);
 
         [Obsolete("Use NativeUtils.NativeHook instead. This will be removed in a future update.", true)]
-        internal static void NativeHookAttachDirect(IntPtr target, IntPtr detour) => BootstrapInterop.NativeHookAttachDirect(target, detour);
+        internal static IntPtr NativeHookAttachDirect(IntPtr target, IntPtr detour) => BootstrapInterop.NativeHookAttachDirect(target, detour);
 
         [Obsolete("Use NativeUtils.NativeHook instead. This will be removed in a future update.", true)]
         public static void NativeHookDetach(IntPtr target, IntPtr detour) => BootstrapInterop.NativeHookDetach(target, detour);

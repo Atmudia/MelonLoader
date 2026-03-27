@@ -58,7 +58,7 @@ namespace MelonLoader
             // Since MonoMod's PlatformHelper (used by DetourHelper.Native) runs Process.Start to determine ARM/x86
             // platform, this causes the unpatched TermInfoReader to kick in before it can be patched and fixed when
             // installing the XTermFix below. To work around this, we can force the platform directly
-            DetourHelper.Native = new DetourNativeMonoPosixPlatform(new DetourNativeX86Platform());
+            //DetourHelper.Native = new DetourNativeMonoPosixPlatform(new DetourNativeX86Platform());
 #endif
 
             HarmonyInstance = new HarmonyLib.Harmony(Properties.BuildInfo.Name);
@@ -130,7 +130,7 @@ namespace MelonLoader
 #endif
 
             Fixes.ForcedCultureInfo.Install();
-            Fixes.Harmony.InstancePatchFix.Install();
+            Fixes.MonoMod.InstancePatchFix.Install();
 
 #if WINDOWS
             Fixes.ProcessFix.Install();
@@ -144,14 +144,12 @@ namespace MelonLoader
             // Fixes.Il2CppInterop.Il2CppInteropExceptionLog.Install();
 
 #if OSX
-            Fixes.Il2CppInterop.Il2CppInteropMacFix.Install();
             Fixes.Dotnet.NativeLibraryFix.Install();
 #endif
 
             // Fixes.Il2CppInterop.Il2CppInteropFixes.Install();
             // Fixes.Il2CppInterop.Il2CppInteropGetFieldDefaultValueFix.Install();
             // Fixes.Il2CppInterop.Il2CppInteropGenericMethodGetMethodFix.Install();
-
             // Fixes.Il2CppInterop.Il2CppICallInjector.Install();
 
 #endif
@@ -210,6 +208,7 @@ namespace MelonLoader
             if (!SupportModule.Setup())
                 return false;
 
+            MelonDebug.Msg("Invoking AddUnityDebugLog");
             AddUnityDebugLog();
 
 #if NET6_0_OR_GREATER
@@ -217,7 +216,10 @@ namespace MelonLoader
             RegisterTypeInIl2CppWithInterfaces.SetReady();
 #endif
 
+            MelonDebug.Msg("Invoking MelonHarmonyInit");
             MelonEvents.MelonHarmonyInit.Invoke();
+
+            MelonDebug.Msg("Invoking OnApplicationStart");
             MelonEvents.OnApplicationStart.Invoke();
 
             return true;
