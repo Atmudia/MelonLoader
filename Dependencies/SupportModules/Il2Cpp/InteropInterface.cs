@@ -42,14 +42,15 @@ namespace MelonLoader.Support
         public bool IsInjectedType(Type type)
         {
             IntPtr ptr = GetClassPointerForType(type);
-            return ptr != IntPtr.Zero && RuntimeSpecificsStore.IsInjected(ptr);
+            return ptr != IntPtr.Zero;
+            // return ptr != IntPtr.Zero && RuntimeSpecificsStore.IsInjected(ptr);
         }
 
         public IntPtr GetClassPointerForType(Type type)
         {
-            if (type == typeof(void)) return Il2CppClassPointerStore<Il2CppSystem.Void>.NativeClassPtr;
+            if (type == typeof(void)) return Il2CppClassPointerStore<Il2CppSystem.Void>.NativeClassPointer;
             return (IntPtr)typeof(Il2CppClassPointerStore<>).MakeGenericType(type)
-                  .GetField(nameof(Il2CppClassPointerStore<int>.NativeClassPtr)).GetValue(null);
+                  .GetField(nameof(Il2CppClassPointerStore<int>.NativeClassPointer)).GetValue(null);
         }
     }
 }

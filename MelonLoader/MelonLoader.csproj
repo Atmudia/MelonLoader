@@ -74,4 +74,7 @@
         <Compile Include="$(SolutionDir)/MelonLoader.Bootstrap/Logging/ColorARGB.cs" Link="Utils\ColorARGB.cs" />
         <Compile Include="$(SolutionDir)/MelonLoader.Bootstrap/SharedDelegates.cs" Link="BootstrapUtils/SharedDelegates.cs" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Fixes\Il2CppInterop\" />
+    </ItemGroup>
 </Project>

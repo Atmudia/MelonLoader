@@ -119,7 +119,7 @@ namespace MelonLoader
 
 #endif
 
-            Fixes.MonoMod.DetourContextDisposeFix.Install();
+            // Fixes.MonoMod.DetourContextDisposeFix.Install();
 
 #if NET6_0_OR_GREATER
             // if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

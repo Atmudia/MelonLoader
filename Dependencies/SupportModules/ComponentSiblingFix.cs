@@ -6,6 +6,7 @@ using Exception = System.Exception;
 #if SM_Il2Cpp
 using Il2CppInterop.Runtime;
 using Il2CppInterop.Runtime.InteropTypes;
+using MelonLoader.InternalUtils;
 
 #else
 using System.Linq;
@@ -18,12 +19,16 @@ namespace MelonLoader.Support
         private static bool _failure;
 
 #if SM_Il2Cpp
+        private delegate void SetAsLastSiblingDelegate_Unity6(ByReference<Il2CppSystem.IntPtr> obj);
         private delegate void SetAsLastSiblingDelegate(ByReference<Transform> obj);
+        private static SetAsLastSiblingDelegate_Unity6 _method_unity6;
 #else
         private static MethodInfo _methodInfo;
         private delegate void SetAsLastSiblingDelegate(Transform obj);
+        
 #endif
         private static SetAsLastSiblingDelegate _method;
+
 
         internal static void SetAsLastSibling(Component obj)
         {
@@ -46,8 +51,16 @@ namespace MelonLoader.Support
             try
             {
 #if SM_Il2Cpp
-                _method = IL2CPP.ResolveICall<SetAsLastSiblingDelegate>("UnityEngine.Transform::SetAsLastSibling");
-                if (_method == null)
+                if (UnityInformationHandler.EngineVersion.Major >= 6000)
+                {
+                    _method_unity6 = IL2CPP.ResolveICall<SetAsLastSiblingDelegate_Unity6>("UnityEngine.Transform::SetAsLastSibling_Injected");
+                }
+                else
+                {
+                    _method = IL2CPP.ResolveICall<SetAsLastSiblingDelegate>("UnityEngine.Transform::SetAsLastSibling");
+
+                }
+                if (_method == null && _method_unity6 == null)
                     throw new Exception("Unable to find Internal Call for UnityEngine.Transform::SetAsLastSibling");
 #else
                 _methodInfo = typeof(Transform).GetMethods(BindingFlags.Public | BindingFlags.Instance).FirstOrDefault(x => (
@@ -79,10 +92,24 @@ namespace MelonLoader.Support
 #if SM_Il2Cpp
                 unsafe
                 {
-                    nint byref = obj.transform.Pointer;
-                    _method((ByReference<Transform>)(void*)&byref);
-                    nint byref2 = obj.gameObject.transform.Pointer;
-                    _method((ByReference<Transform>)(void*)&byref2);
+
+                    if (UnityInformationHandler.EngineVersion.Major >= 6000)
+                    {
+                        Il2CppSystem.IntPtr byref = obj.transform.m_CachedPtr;
+                        _method_unity6((ByReference<Il2CppSystem.IntPtr>)(void*)&byref);
+                        Il2CppSystem.IntPtr byref2 = obj.gameObject.transform.m_CachedPtr;
+                        _method_unity6((ByReference<Il2CppSystem.IntPtr>)(void*)&byref2);
+                    }
+                    else
+                    {
+                        nint byref = obj.transform.Pointer;
+                        _method((ByReference<Transform>)(void*)&byref);
+                        nint byref2 = obj.gameObject.transform.Pointer;
+                        _method((ByReference<Transform>)(void*)&byref2);
+                    }
+
+                    
+
                 }
 #else                
                 _method(obj.transform);

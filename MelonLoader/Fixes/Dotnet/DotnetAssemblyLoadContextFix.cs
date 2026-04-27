@@ -45,11 +45,11 @@ namespace MelonLoader.Fixes.Dotnet
             //if(MelonDebug.IsEnabled() && !Environment.StackTrace.Contains("HarmonyLib"))
             //    MelonDebug.Msg($"[.NET AssemblyLoadContext Fix] Redirecting Assembly.Load call with {rawAssembly.Length}-byte assembly to AssemblyLoadContext.Default. Mod Devs: You may wish to use this explictly.");
 
-            var (ok, reason) = AssemblyVerifier.VerifyByteArray(rawAssembly);
-            if (!ok)
-            {
-                throw new BadImageFormatException();
-            }
+            // var (ok, reason) = AssemblyVerifier.VerifyByteArray(rawAssembly);
+            // if (!ok)
+            // {
+            //     throw new BadImageFormatException();
+            // }
 
             __result = DefaultContextInternalLoad(rawAssembly, rawSymbolStore);
 
@@ -85,7 +85,7 @@ namespace MelonLoader.Fixes.Dotnet
 
         public static bool PreAlcLoadFromPath(string ilPath)
         {
-            //MelonDebug.Msg($"[ALC FromPath] Validating {ilPath}...");
+            MelonDebug.Msg($"[ALC FromPath] Validating {ilPath}...");
 
             //Simple pass-to-verifier and throw if bad.
             var (ok, reason) = AssemblyVerifier.VerifyFile(ilPath);

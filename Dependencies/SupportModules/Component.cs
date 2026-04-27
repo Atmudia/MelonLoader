@@ -3,9 +3,11 @@
 #if SM_Il2Cpp
 using System;
 using Il2CppInterop.Common;
+using Il2CppInterop.Common.Attributes;
 using Il2CppInterop.Runtime;
 using Il2CppInterop.Runtime.Injection;
 using Il2CppInterop.Runtime.InteropTypes;
+using Il2CppInterop.Runtime.Runtime;
 #endif
 
 namespace MelonLoader.Support
@@ -15,7 +17,16 @@ namespace MelonLoader.Support
         , IIl2CppType<SM_Component>
 #endif
     {
-        private bool isQuitting;
+#if SM_Il2Cpp
+        [Il2CppField]
+        private Il2CppSystem.Boolean isQuitting
+        {
+            get => FieldAccess.GetInstanceFieldValue<Il2CppSystem.Boolean>(this, IsQuitingFieldOffset);
+            set => FieldAccess.SetInstanceFieldValue(this, IsQuitingFieldOffset, value);
+        }
+#else
+    private bool isQuitting;
+#endif
 
 #if SM_Il2Cpp
         public SM_Component(ObjectPointer value) : base(value) { }
@@ -33,7 +44,6 @@ namespace MelonLoader.Support
             Main.obj.hideFlags = HideFlags.DontSave;
 
 #if SM_Il2Cpp
-            ClassInjector.RegisterTypeInIl2Cpp<SM_Component>();
             Main.component = Main.obj.AddComponent<SM_Component>();
 #else
             Main.component = (SM_Component)Main.obj.AddComponent(typeof(SM_Component));
@@ -51,7 +61,7 @@ namespace MelonLoader.Support
 
             foreach (var queuedCoroutine in MelonCoroutines._queue)
 #if SM_Il2Cpp
-                // StartCoroutine(new Il2CppSystem.Collections.IEnumerator(new MonoEnumeratorWrapper(queuedCoroutine).Pointer));
+                StartCoroutine(new MonoEnumeratorWrapper(queuedCoroutine));
 #else
                 StartCoroutine(queuedCoroutine);
 #endif
@@ -140,16 +150,27 @@ namespace MelonLoader.Support
 #if SM_Il2Cpp
         public static void WriteToSpan(SM_Component value, Span<byte> span)
         {
-            
+            Il2CppType.WriteReference(value, span);
         }
 
         public static SM_Component ReadFromSpan(ReadOnlySpan<byte> span)
         {
-            return null;   
+            return  Il2CppType.ReadReference<SM_Component>(span);;   
         }
         
+        static int IIl2CppType<SM_Component>.Size => nint.Size;
 
-        public static int Size { get; }
+        nint IIl2CppType.ObjectClass => Il2CppClassPointerStore<SM_Component>.NativeClassPointer;
+        static readonly int IsQuitingFieldOffset;
+
+        static SM_Component()
+        {
+            TypeInjector.RegisterTypeInIl2Cpp<SM_Component>();
+            IsQuitingFieldOffset = (int)IL2CPP.il2cpp_field_get_offset(IL2CPP.GetIl2CppField(Il2CppClassPointerStore<SM_Component>.NativeClassPointer, nameof(isQuitting)));
+            Il2CppObjectPool.RegisterInitializer(Il2CppClassPointerStore<SM_Component>.NativeClassPointer, ptr => new SM_Component(ptr));
+        }
+        
 #endif
     }
+    
 }

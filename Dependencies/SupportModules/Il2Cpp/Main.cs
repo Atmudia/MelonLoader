@@ -67,7 +67,6 @@ namespace MelonLoader.Support
             if (!LoaderConfig.Current.UnityEngine.DisableConsoleLogCleaner)
                 ConsoleCleaner();
 
-            // MonoEnumeratorWrapper.Register();
             GetSceneManagerMethods(out MethodInfo sceneLoaded,
                 out MethodInfo sceneUnloaded);
             if (sceneLoaded == null)
@@ -222,8 +221,7 @@ namespace MelonLoader.Support
     {
         private MelonLogger.Instance _logger = new("Il2CppInterop");
 
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception,
-            Func<TState, Exception, string> formatter)
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, System.Func<TState, Exception, string> formatter)
         {
             var logLine = state.ToString() ?? string.Empty;
 
@@ -262,6 +260,6 @@ namespace MelonLoader.Support
             };
 
         public IDisposable BeginScope<TState>(TState state)
-            => throw new NotImplementedException();
+            => throw new System.NotImplementedException();
     }
 }
